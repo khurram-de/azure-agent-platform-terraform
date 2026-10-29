@@ -1,0 +1,9 @@
+subscription_id = "00000000-0000-0000-0000-000000000000"
+location        = "germanynorth"
+environment     = "dev"
+
+tags = {
+  project     = "azure-agent-platform"
+  managed_by  = "terraform"
+  environment = "dev"
+}
