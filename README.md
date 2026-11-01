@@ -24,44 +24,40 @@ A Terraform-based platform for deploying AI agents on Azure with security and is
 
 ```mermaid
 graph TB
-    subgraph "Azure Subscription"
-        subgraph "Resource Group: rg-agent-platform-dev"
-            LA[Log Analytics Workspace<br/>30-day retention, 1GB daily cap]
-            CAE[Container Apps Environment<br/>Logs → Log Analytics]
-            
-            subgraph "support-agent"
-                ID1[Managed Identity<br/>id-support-agent]
-                KV1[Key Vault<br/>kv-support-agent-abc123]
-                CA1[Container App<br/>ca-support-agent<br/>Scale to zero]
-                RA1[Role Assignment<br/>Key Vault Secrets User]
-                
-                ID1 -.->|attached to| CA1
-                ID1 -->|granted| RA1
-                RA1 -->|scoped to| KV1
-                CA1 -->|runs in| CAE
-                CA1 -->|logs to| LA
-            end
-            
-            subgraph "research-agent"
-                ID2[Managed Identity<br/>id-research-agent]
-                KV2[Key Vault<br/>kv-research-agent-def456]
-                CA2[Container App<br/>ca-research-agent<br/>Scale to zero]
-                RA2[Role Assignment<br/>Key Vault Secrets User]
-                
-                ID2 -.->|attached to| CA2
-                ID2 -->|granted| RA2
-                RA2 -->|scoped to| KV2
-                CA2 -->|runs in| CAE
-                CA2 -->|logs to| LA
-            end
-        end
-        
-        subgraph "Remote State"
-            BS[Storage Account<br/>sttfstate1khf7u]
-            BC[Blob Container: tfstate]
-            BS --> BC
-        end
+    subgraph Platform["Platform Resources (rg-agent-platform-dev)"]
+        LA[Log Analytics Workspace]
+        CAE[Container Apps Environment]
     end
+    
+    subgraph Agent1["support-agent"]
+        ID1[Managed Identity]
+        KV1[Key Vault]
+        CA1[Container App]
+        RA1[RBAC: Secrets User]
+    end
+    
+    subgraph Agent2["research-agent"]
+        ID2[Managed Identity]
+        KV2[Key Vault]
+        CA2[Container App]
+        RA2[RBAC: Secrets User]
+    end
+    
+    subgraph State["Remote State"]
+        SA[Storage Account]
+        SC[Blob Container]
+    end
+    
+    CA1 --> CAE
+    CA2 --> CAE
+    CAE --> LA
+    CA1 -.->|uses| ID1
+    CA2 -.->|uses| ID2
+    ID1 -->|granted| RA1
+    ID2 -->|granted| RA2
+    RA1 -.->|scoped to| KV1
+    RA2 -.->|scoped to| KV2
+    SA --> SC
     
     style ID1 fill:#e1f5ff
     style ID2 fill:#e1f5ff
@@ -69,9 +65,9 @@ graph TB
     style KV2 fill:#fff4e1
     style CA1 fill:#e8f5e9
     style CA2 fill:#e8f5e9
-    style RA1 fill:#f3e5f5
-    style RA2 fill:#f3e5f5
 ```
+
+**Key isolation:** Each agent's managed identity can only access its own Key Vault through scoped RBAC assignments.
 
 ---
 
