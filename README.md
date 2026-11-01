@@ -24,39 +24,36 @@ A Terraform-based platform for deploying AI agents on Azure with security and is
 
 ```mermaid
 graph TB
-    subgraph Platform["Platform Resources (rg-agent-platform-dev)"]
+    subgraph RG["Resource Group: rg-agent-platform-dev"]
+        direction TB
+        
         LA[Log Analytics Workspace]
         CAE[Container Apps Environment]
+        
+        ID1[Managed Identity: support-agent]
+        KV1[Key Vault: support-agent]
+        CA1[Container App: support-agent]
+        
+        ID2[Managed Identity: research-agent]
+        KV2[Key Vault: research-agent]
+        CA2[Container App: research-agent]
     end
     
-    subgraph Agent1["support-agent"]
-        ID1[Managed Identity]
-        KV1[Key Vault]
-        CA1[Container App]
-        RA1[RBAC: Secrets User]
-    end
-    
-    subgraph Agent2["research-agent"]
-        ID2[Managed Identity]
-        KV2[Key Vault]
-        CA2[Container App]
-        RA2[RBAC: Secrets User]
-    end
-    
-    subgraph State["Remote State"]
+    subgraph State["Remote State (separate RG)"]
         SA[Storage Account]
         SC[Blob Container]
     end
     
-    CA1 --> CAE
-    CA2 --> CAE
-    CAE --> LA
+    CA1 -->|runs in| CAE
+    CA2 -->|runs in| CAE
+    CAE -->|logs to| LA
+    
     CA1 -.->|uses| ID1
     CA2 -.->|uses| ID2
-    ID1 -->|granted| RA1
-    ID2 -->|granted| RA2
-    RA1 -.->|scoped to| KV1
-    RA2 -.->|scoped to| KV2
+    
+    ID1 -->|RBAC: Secrets User| KV1
+    ID2 -->|RBAC: Secrets User| KV2
+    
     SA --> SC
     
     style ID1 fill:#e1f5ff
@@ -67,7 +64,7 @@ graph TB
     style CA2 fill:#e8f5e9
 ```
 
-**Key isolation:** Each agent's managed identity can only access its own Key Vault through scoped RBAC assignments.
+**Security isolation:** Each agent's managed identity has scoped RBAC access only to its own Key Vault. `support-agent` identity cannot access `research-agent` vault, and vice versa.
 
 ---
 
