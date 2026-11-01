@@ -8,7 +8,7 @@ A Terraform-based platform for deploying AI agents on Azure with security and is
 
 | Component | Status | Description |
 |-----------|--------|-------------|
-| **Bootstrap** | ✅ Built, ⏸️ Not Applied | Remote state storage in Azure Blob |
+| **Bootstrap** | ✅ Built & Applied | Remote state storage in Azure Blob |
 | **Platform Module** | ✅ Built, ⏸️ Not Applied | Shared infrastructure (RG, Log Analytics, Container Apps env) |
 | **Workload Module** | ✅ Built, ⏸️ Not Applied | Per-agent resources (identity, vault, container app) |
 | **Dev Environment** | ✅ Built, ⏸️ Not Applied | 2 agents defined, 13 resources planned |
@@ -16,7 +16,7 @@ A Terraform-based platform for deploying AI agents on Azure with security and is
 | **CI/CD** | 📋 Next Step | Atlantis/GitHub Actions integration |
 | **Developer Access** | 📋 Next Step | Role assignments for secrets management |
 
-**Current state:** All infrastructure is planned and validated (`terraform plan` succeeds). Nothing has been applied to Azure yet. The project demonstrates infrastructure-as-code patterns and security design, ready to deploy.
+**Current state:** Remote state infrastructure is deployed. Platform and agent modules are validated (`terraform plan` succeeds) and ready to deploy.
 
 ---
 
