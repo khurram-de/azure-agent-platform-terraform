@@ -2,8 +2,6 @@
 
 A Terraform-based platform for deploying AI agents on Azure with security and isolation built-in. Each agent gets its own managed identity, Key Vault, and Container App, following the "paved road" pattern for self-service infrastructure.
 
-**Learning Project:** This project was built to learn Terraform and Azure while preparing for platform engineering interviews. I used Claude as a tutor but typed all code myself and can explain every resource and design decision.
-
 ---
 
 ## Status
@@ -394,17 +392,6 @@ terraform plan
 - Why separate environments? (blast radius, different configs)
 
 ---
-
-## Learning Process
-
-This project was built as a learning exercise:
-
-1. **Started with AWS knowledge** — mapped IAM roles to managed identities, Secrets Manager to Key Vault
-2. **Used Claude as a tutor** — explained concepts, I typed all code
-3. **Focused on understanding** — can explain every resource and design decision
-4. **Followed best practices** — security, modularity, documentation
-
-**I can walk through the entire architecture and defend every choice.**
 
 ---
 
